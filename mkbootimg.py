@@ -553,8 +553,6 @@ def parse_cmdline():
                         help='path to the vendor bootconfig file')
 
     args, extra_args = parser.parse_known_args()
-    if args.header_version > 0 and args.dt != None:
-        raise ValueError('header_version and dt cannot be set at the same time')
     if args.vendor_boot is not None and args.header_version > 3:
         extra_args = parse_vendor_ramdisk_args(args, extra_args)
     if len(extra_args) > 0:
@@ -565,6 +563,9 @@ def parse_cmdline():
         args.cmdline = args.cmdline[:BOOT_ARGS_SIZE-1] + b'\x00'
         assert len(args.cmdline) <= BOOT_ARGS_SIZE
         assert len(args.extra_cmdline) <= BOOT_EXTRA_ARGS_SIZE
+        
+    if args.header_version > 0 and args.dt != None:
+        raise ValueError('header_version and dt cannot be set at the same time')
 
     return args
 
